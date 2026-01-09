@@ -9,7 +9,7 @@
 - ✅ 自动获取当前网站的cookie和header用于API授权
 - ✅ 独立标签页打开
 - ✅ 使用Manifest V3开发
-![加载扩展程序](https://wsrv.nl?url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_png%2FRJoMExhibuamfNkylCNBCwsLLpn8xkkXUFCGIx2Niam5ibF3gOFOxhiavXEad6KuDWN3tzvXEtnsw6wcxXnOmNaBVg%2F0%3Ffrom%3Dappmsg)
+![](https://wsrv.nl?url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_png%2FRJoMExhibuamfNkylCNBCwsLLpn8xkkXUObdFNibicf2azGKxTsnhGs3b67iaY08sw1riapRGMtaHkECO80wZoKpZqg%2F0%3Ffrom%3Dappmsg)
 
 ## 安装方法
 
