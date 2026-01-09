@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitLab提交记录检查器</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>GitLab提交记录检查器</h1>
+      <button id="closeBtn" class="btn-close" title="关闭">×</button>
+    </header>
+    
+    <div class="config-section">
+      <div class="input-group">
+        <label for="gitlabUrl">GitLab地址:</label>
+        <input type="text" id="gitlabUrl" placeholder="https://www.gitlab.com" value="">
+      </div>
+      
+      <div class="input-group">
+        <label for="projectsInput">项目列表 (每行一个，格式: 项目路径/分支):</label>
+        <textarea id="projectsInput" rows="6" placeholder="例如:&#10;group/project1/master&#10;group/project2/develop&#10;group/project3/test"></textarea>
+      </div>
+      
+      <button id="checkBtn" class="btn-primary">一键检查</button>
+    </div>
+    
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>正在检查提交记录...</p>
+    </div>
+    
+    <div id="results" class="results-section" style="display: none;">
+      <h2>检查结果</h2>
+      <div id="resultsList"></div>
+    </div>
+    
+    <div id="error" class="error-message" style="display: none;"></div>
+  </div>
+  
+  <script src="panel.js"></script>
+</body>
+</html>
