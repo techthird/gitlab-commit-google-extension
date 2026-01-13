@@ -9,7 +9,6 @@
 - ✅ 自动获取当前网站的cookie和header用于API授权
 - ✅ 独立标签页打开
 - ✅ 使用Manifest V3开发
-![](https://wsrv.nl?url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_png%2FRJoMExhibuamfNkylCNBCwsLLpn8xkkXUObdFNibicf2azGKxTsnhGs3b67iaY08sw1riapRGMtaHkECO80wZoKpZqg%2F0%3Ffrom%3Dappmsg)
 
 ## 安装方法
 
@@ -17,9 +16,6 @@
 2. 开启"开发者模式"（右上角开关）
 3. 点击"加载已解压的扩展程序"
 4. 选择本项目文件夹
-![加载扩展程序](https://wsrv.nl?url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_png%2FRJoMExhibuamfNkylCNBCwsLLpn8xkkXUFCGIx2Niam5ibF3gOFOxhiavXEad6KuDWN3tzvXEtnsw6wcxXnOmNaBVg%2F0%3Ffrom%3Dappmsg)
-
-
 
 ## 使用方法
 
@@ -39,8 +35,6 @@
    - 提交人
    - 提交时间（相对时间显示）
    - 提交备注
-
-![执行效果](https://wsrv.nl?url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_png%2FRJoMExhibuamfNkylCNBCwsLLpn8xkkXU3fJXPPqSnP28FeTYfoFhd48T96c2RM3xOia7wm7yZvfKt1auHQk2sCw%2F0%3Ffrom%3Dappmsg)
 
 ## 项目结构
 

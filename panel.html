@@ -16,15 +16,36 @@
     <div class="config-section">
       <div class="input-group">
         <label for="gitlabUrl">GitLab地址:</label>
-        <input type="text" id="gitlabUrl" placeholder="https://www.gitlab.com" value="">
+        <input type="text" id="gitlabUrl" placeholder="https://yxtgit.hxyxt.com" value="https://yxtgit.hxyxt.com">
       </div>
       
       <div class="input-group">
         <label for="projectsInput">项目列表 (每行一个，格式: 项目路径/分支):</label>
-        <textarea id="projectsInput" rows="6" placeholder="例如:&#10;group/project1/master&#10;group/project2/develop&#10;group/project3/test"></textarea>
+        <textarea id="projectsInput" rows="6" placeholder="例如:&#10;order/hydee-business-order/master&#10;group/project2/develop&#10;group/project3/master"></textarea>
       </div>
       
-      <button id="checkBtn" class="btn-primary">一键检查</button>
+      <div class="button-group">
+        <button id="checkBtn" class="btn-primary">一键检查</button>
+        <button id="historyBtn" class="btn-history" title="历史记录">📋</button>
+      </div>
+    </div>
+    
+    <!-- 历史记录弹窗 -->
+    <div id="historyModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>历史记录</h2>
+          <div class="modal-header-actions">
+            <button id="clearHistoryBtn" class="btn-clear-history" title="清空历史记录">清空历史记录</button>
+            <button id="closeHistoryBtn" class="btn-close-modal" title="关闭">×</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div id="historyList" class="history-list">
+            <div class="empty-state">暂无历史记录</div>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div id="loading" class="loading" style="display: none;">

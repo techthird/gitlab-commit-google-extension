@@ -226,6 +226,8 @@ async function checkCommits() {
         showError(response.error);
       } else if (response.results) {
         renderResults(response.results);
+        // 检查成功后保存历史记录
+        saveHistory(gitlabUrl, projects);
       } else {
         showError('响应格式错误');
       }
@@ -238,15 +240,158 @@ async function checkCommits() {
   }
 }
 
+// 保存历史记录
+async function saveHistory(gitlabUrl, projects) {
+  try {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hour = String(now.getHours()).padStart(2, '0');
+    const minute = String(now.getMinutes()).padStart(2, '0');
+    const second = String(now.getSeconds()).padStart(2, '0');
+    const timeStr = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    
+    const historyItem = {
+      time: timeStr,
+      gitlabUrl: gitlabUrl,
+      projects: projects.map(p => `${p.path}/${p.branch}`)
+    };
+    
+    const result = await chrome.storage.local.get(['history']);
+    const history = result.history || [];
+    
+    // 添加到历史记录开头
+    history.unshift(historyItem);
+    
+    // 限制历史记录数量（最多保存50条）
+    if (history.length > 50) {
+      history.pop();
+    }
+    
+    await chrome.storage.local.set({ history: history });
+  } catch (error) {
+    console.error('Error saving history:', error);
+  }
+}
+
+// 获取历史记录
+async function getHistory() {
+  try {
+    const result = await chrome.storage.local.get(['history']);
+    return result.history || [];
+  } catch (error) {
+    console.error('Error getting history:', error);
+    return [];
+  }
+}
+
+// 显示历史记录弹窗
+async function showHistory() {
+  const history = await getHistory();
+  const historyList = document.getElementById('historyList');
+  
+  if (history.length === 0) {
+    historyList.innerHTML = '<div class="empty-state">暂无历史记录</div>';
+  } else {
+    // 创建表格
+    let tableHTML = '<table class="history-table"><thead><tr><th>检查时间</th><th>项目路径/分支</th></tr></thead><tbody>';
+    
+    history.forEach((item, index) => {
+      const projectsText = item.projects.join('<br>');
+      tableHTML += `
+        <tr class="history-row" data-index="${index}">
+          <td class="history-time">${item.time}</td>
+          <td class="history-projects">${projectsText}</td>
+        </tr>
+      `;
+    });
+    
+    tableHTML += '</tbody></table>';
+    historyList.innerHTML = tableHTML;
+    
+    // 为每一行添加点击事件
+    document.querySelectorAll('.history-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const index = parseInt(row.getAttribute('data-index'));
+        fillFromHistory(history[index]);
+        closeHistoryModal();
+      });
+    });
+  }
+  
+  document.getElementById('historyModal').style.display = 'flex';
+}
+
+// 从历史记录填充表单
+function fillFromHistory(historyItem) {
+  document.getElementById('gitlabUrl').value = historyItem.gitlabUrl;
+  document.getElementById('projectsInput').value = historyItem.projects.join('\n');
+}
+
+// 清空历史记录
+async function clearHistory() {
+  if (confirm('确定要清空所有历史记录吗？')) {
+    try {
+      await chrome.storage.local.remove('history');
+      // 刷新历史记录列表
+      await showHistory();
+    } catch (error) {
+      console.error('Error clearing history:', error);
+      alert('清空历史记录失败');
+    }
+  }
+}
+
+// 关闭历史记录弹窗
+function closeHistoryModal() {
+  document.getElementById('historyModal').style.display = 'none';
+}
+
 // 关闭窗口
 function closeWindow() {
   window.close();
 }
 
+// 从URL参数获取项目列表
+function loadProjectsFromUrl() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectPath = urlParams.get('projectPath');
+    
+    if (projectPath) {
+      // 使用|分隔多个项目，并转换为换行符分隔
+      const projects = projectPath.split('|').map(p => p.trim()).filter(p => p);
+      if (projects.length > 0) {
+        document.getElementById('projectsInput').value = projects.join('\n');
+        // 填充完成后自动触发一键检查
+        setTimeout(() => {
+          checkCommits();
+        }, 100); // 延迟100ms确保DOM更新完成
+      }
+    }
+  } catch (error) {
+    console.error('Error loading projects from URL:', error);
+  }
+}
+
 // 事件监听
 document.addEventListener('DOMContentLoaded', () => {
+  // 页面初始化时从URL参数加载项目列表
+  loadProjectsFromUrl();
+  
   document.getElementById('checkBtn').addEventListener('click', checkCommits);
   document.getElementById('closeBtn').addEventListener('click', closeWindow);
+  document.getElementById('historyBtn').addEventListener('click', showHistory);
+  document.getElementById('closeHistoryBtn').addEventListener('click', closeHistoryModal);
+  document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+  
+  // 点击弹窗外部关闭
+  document.getElementById('historyModal').addEventListener('click', (e) => {
+    if (e.target.id === 'historyModal') {
+      closeHistoryModal();
+    }
+  });
   
   // 支持Enter键提交（Ctrl+Enter）
   document.getElementById('projectsInput').addEventListener('keydown', (e) => {
@@ -258,7 +403,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // 支持ESC键关闭
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeWindow();
+      const historyModal = document.getElementById('historyModal');
+      if (historyModal.style.display === 'flex') {
+        closeHistoryModal();
+      } else {
+        closeWindow();
+      }
     }
   });
 });
